@@ -33,3 +33,35 @@ document.getElementById('back-btn').addEventListener('click', function() {
 document.getElementById('add-back-btn').addEventListener('click', function() {
   showScreen(homeScreen);
 });
+
+// Flip card logic
+const flipBtn = document.getElementById('flip-btn');
+const cardLabel = document.getElementById('card-label');
+const cardText = document.getElementById('card-text');
+
+let isFlipped = false;
+
+flipBtn.addEventListener('click', function() {
+  if (isFlipped === false) {
+    // Show the answer
+    cardLabel.textContent = 'Answer';
+    cardText.textContent = 'A variable is a container for storing data values';
+    flipBtn.textContent = '';
+
+    // Replace flip button with got it / missed it buttons
+    flipBtn.hidden = true;
+
+    const gotItBtn = document.createElement('button');
+    gotItBtn.textContent = 'Got it ✅';
+    gotItBtn.id = 'got-it-btn';
+
+    const missedItBtn = document.createElement('button');
+    missedItBtn.textContent = 'Missed it ❌';
+    missedItBtn.id = 'missed-it-btn';
+
+    document.getElementById('study-screen').appendChild(gotItBtn);
+    document.getElementById('study-screen').appendChild(missedItBtn);
+
+    isFlipped = true;
+  }
+});
