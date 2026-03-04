@@ -160,3 +160,14 @@ button {
   border: none;
   border-radius: 6px;
 }
+
+#home-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  background: #1a6b7c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin-top: 10px;
+}

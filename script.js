@@ -1,7 +1,31 @@
+// Our card data
+const decks = {
+  JavaScript: [
+    { question: 'What is a variable?', answer: 'A container for storing data values' },
+    { question: 'What does typeof do?', answer: 'Returns the data type of a value' },
+  ],
+  CSS: [
+    { question: 'What does flexbox do?', answer: 'It arranges elements in a row or column' },
+  ],
+  HTML: [
+    { question: 'What is a div?', answer: 'A block level container element' },
+  ]
+};
+
+let currentDeck = [];
+let currentCardIndex = 0;
+
 // Grab all three screens
 const homeScreen = document.getElementById('home-screen');
 const studyScreen = document.getElementById('study-screen');
 const addScreen = document.getElementById('add-screen');
+
+// Flip card elements
+const flipBtn = document.getElementById('flip-btn');
+const cardLabel = document.getElementById('card-label');
+const cardText = document.getElementById('card-text');
+
+let isFlipped = false;
 
 // Function to show one screen and hide the others
 function showScreen(screen) {
@@ -11,31 +35,30 @@ function showScreen(screen) {
   screen.hidden = false;
 }
 
-// Flip card elements
-const flipBtn = document.getElementById('flip-btn');
-const cardLabel = document.getElementById('card-label');
-const cardText = document.getElementById('card-text');
-
-let isFlipped = false;
-
 // Reset the card back to question side
 function resetCard() {
   cardLabel.textContent = 'Question';
-  cardText.textContent = 'What is a variable?';
+  cardText.textContent = currentDeck[currentCardIndex].question;
   flipBtn.hidden = false;
   isFlipped = false;
 
-  // Remove got it / missed it buttons if they exist
   const gotItBtn = document.getElementById('got-it-btn');
   const missedItBtn = document.getElementById('missed-it-btn');
   if (gotItBtn) gotItBtn.remove();
   if (missedItBtn) missedItBtn.remove();
+
+  // Update counter
+  document.getElementById('card-counter').textContent = 'Card ' + (currentCardIndex + 1) + ' / ' + currentDeck.length;
 }
 
 // When any deck button is clicked, go to study screen
 const deckButtons = document.querySelectorAll('.deck-btn');
 deckButtons.forEach(function(btn) {
   btn.addEventListener('click', function() {
+    const deckName = btn.querySelector('span').textContent;
+    currentDeck = decks[deckName];
+    currentCardIndex = 0;
+
     resetCard();
     showScreen(studyScreen);
   });
@@ -60,7 +83,7 @@ document.getElementById('add-back-btn').addEventListener('click', function() {
 flipBtn.addEventListener('click', function() {
   if (isFlipped === false) {
     cardLabel.textContent = 'Answer';
-    cardText.textContent = 'A variable is a container for storing data values';
+    cardText.textContent = currentDeck[currentCardIndex].answer;
     flipBtn.hidden = true;
 
     const gotItBtn = document.createElement('button');
@@ -75,5 +98,50 @@ flipBtn.addEventListener('click', function() {
     document.getElementById('study-screen').appendChild(missedItBtn);
 
     isFlipped = true;
+  }
+});
+
+// Got it / Missed it logic
+let score = 0;
+
+document.getElementById('study-screen').addEventListener('click', function(e) {
+  if (e.target.id === 'got-it-btn') {
+    score++;
+    nextCard();
+  } else if (e.target.id === 'missed-it-btn') {
+    nextCard();
+  }
+});
+
+function nextCard() {
+  currentCardIndex++;
+
+  if (currentCardIndex >= currentDeck.length) {
+    // All cards done - show results
+    cardLabel.textContent = 'Done! 🎉';
+    cardText.textContent = 'You got ' + score + ' out of ' + currentDeck.length + ' correct!';
+    flipBtn.hidden = true;
+
+    const gotItBtn = document.getElementById('got-it-btn');
+    const missedItBtn = document.getElementById('missed-it-btn');
+    if (gotItBtn) gotItBtn.remove();
+    if (missedItBtn) missedItBtn.remove();
+
+    // Add a go home button
+    const homeBtn = document.createElement('button');
+    homeBtn.textContent = 'Back to Home';
+    homeBtn.id = 'home-btn';
+    document.getElementById('study-screen').appendChild(homeBtn);
+
+    score = 0;
+  } else {
+    resetCard();
+  }
+}
+
+// Home button after finishing
+document.getElementById('study-screen').addEventListener('click', function(e) {
+  if (e.target.id === 'home-btn') {
+    showScreen(homeScreen);
   }
 });
