@@ -11,10 +11,32 @@ function showScreen(screen) {
   screen.hidden = false;
 }
 
+// Flip card elements
+const flipBtn = document.getElementById('flip-btn');
+const cardLabel = document.getElementById('card-label');
+const cardText = document.getElementById('card-text');
+
+let isFlipped = false;
+
+// Reset the card back to question side
+function resetCard() {
+  cardLabel.textContent = 'Question';
+  cardText.textContent = 'What is a variable?';
+  flipBtn.hidden = false;
+  isFlipped = false;
+
+  // Remove got it / missed it buttons if they exist
+  const gotItBtn = document.getElementById('got-it-btn');
+  const missedItBtn = document.getElementById('missed-it-btn');
+  if (gotItBtn) gotItBtn.remove();
+  if (missedItBtn) missedItBtn.remove();
+}
+
 // When any deck button is clicked, go to study screen
 const deckButtons = document.querySelectorAll('.deck-btn');
 deckButtons.forEach(function(btn) {
   btn.addEventListener('click', function() {
+    resetCard();
     showScreen(studyScreen);
   });
 });
@@ -35,20 +57,10 @@ document.getElementById('add-back-btn').addEventListener('click', function() {
 });
 
 // Flip card logic
-const flipBtn = document.getElementById('flip-btn');
-const cardLabel = document.getElementById('card-label');
-const cardText = document.getElementById('card-text');
-
-let isFlipped = false;
-
 flipBtn.addEventListener('click', function() {
   if (isFlipped === false) {
-    // Show the answer
     cardLabel.textContent = 'Answer';
     cardText.textContent = 'A variable is a container for storing data values';
-    flipBtn.textContent = '';
-
-    // Replace flip button with got it / missed it buttons
     flipBtn.hidden = true;
 
     const gotItBtn = document.createElement('button');
