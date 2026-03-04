@@ -145,3 +145,28 @@ document.getElementById('study-screen').addEventListener('click', function(e) {
     showScreen(homeScreen);
   }
 });
+
+// Save card logic
+document.getElementById('save-btn').addEventListener('click', function() {
+  const deckName = document.getElementById('deck-select').value;
+  const question = document.getElementById('question-input').value;
+  const answer = document.getElementById('answer-input').value;
+
+  // Check fields are not empty
+  if (question === '' || answer === '') {
+    alert('Please fill in both the question and answer!');
+    return;
+  }
+
+  // Add the new card to the deck
+  decks[deckName].push({ question: question, answer: answer });
+
+  // Clear the form
+  document.getElementById('question-input').value = '';
+  document.getElementById('answer-input').value = '';
+
+  // Go back home
+  showScreen(homeScreen);
+
+  alert('Card added to ' + deckName + '!');
+});
